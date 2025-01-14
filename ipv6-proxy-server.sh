@@ -493,11 +493,22 @@ function create_startup_script(){
   # Array with allowed symbols in hex (in ipv6 addresses)
   array=( 1 2 3 4 5 6 7 8 9 0 a b c d e f )
 
+  # Truncate subnet - remove last symbols of block, if subnet isn't divisible by 16
+  function get_truncated_subnet_mask () {
+    # Divide by 4 to get number of redundant symbols in block (one symbol, 0-f, 2^4)
+    redundant_symbols_count=$(( ($subnet % 16) / 4 ))
+    last_subnet_block=$(echo $subnet_mask | awk -F ':' '{print $NF}')
+    symbols_count=\${#last_subnet_block}
+    trunc_symbols_count=\$(( \$redundant_symbols_count - (4 - \$symbols_count) ))
+    mask=$subnet_mask
+    echo \${mask::${#subnet_mask}-\$trunc_symbols_count}
+  }
+
   # Generate random hex symbol
   function rh () { echo \${array[\$RANDOM%16]}; }
 
   rnd_subnet_ip () {
-    echo -n $subnet_mask;
+    echo -n \$(get_truncated_subnet_mask);
     symbol=$subnet
     while (( \$symbol < 128)); do
       if ((\$symbol % 16 == 0)); then echo -n :; fi;
