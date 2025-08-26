@@ -1,0 +1,9 @@
+ใช้บน ubuntu
+./ipv6-proxy-server.sh -s 64 -c 100 -u phanurat -p 1111 -t http -r 10
+
+sudo nano sudo nano /root/proxyserver/3proxy/3proxy.cfg
+ตั้งค่าให้เป็น
+proxy -6 -n -a -p30000 -i192.168.1.152 -e2405:9800:b650:9f16:f854:98ae:ea2f:84f6 เป็น proxy -n -a -p3000 -192.168.1.152 -e192.168.1.152
+
+ตั้งเสร็จ ให้ sudo pkill 3proxy 
+แล้ว  sudo /root/proxyserver/3proxy/bin/3proxy /root/proxyserver/3proxy/3proxy.cfg
